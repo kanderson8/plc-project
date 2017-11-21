@@ -1,9 +1,10 @@
 module Graph where
 import qualified Data.ByteString.Char8 as C
 
-type Vertex = C.ByteString
+type V = C.ByteString
 
-type Edge = (C.ByteString,Vertex,Vertex)
+type E = (C.ByteString,V,V)
 
-data UndirectedGraph = UndirectedGraph [Vertex] [Edge]
+data UndirectedGraph = UndirectedGraph [V] [E]
   deriving (Show)
+
