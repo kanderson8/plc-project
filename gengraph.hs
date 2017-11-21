@@ -4,6 +4,15 @@ import Control.Monad
 import Control.Monad.Trans.State.Lazy
 import System.Environment
 import System.Random
+import Graph
+import Grammar
+import Tokens
+import Prim
+import Kruskal
+import System.Environment
+import Data.Maybe
+import qualified Data.Trie as D
+import qualified Data.ByteString.Char8 as C
 {- RandomState uses the state monad to represent a computation of a value of type a
    where the computation may obtain pseudo-random numbers from a RandomGen g -}
 type RandomState g a = State g a
@@ -53,6 +62,19 @@ generateGraph old new e = do
   edge <- addEdge old next
   generateGraph (old ++ [next]) (tail new) (e ++ [edge])
 
+
+--What we want to do with the undirected graph
+process :: UndirectedGraph -> [String]
+process a = [show a]
+
+
+--writes to file
+writeStringsToFiles :: String -> Int -> [String] -> IO ()
+writeStringsToFiles name num (contents : rest) =
+  writeFile (name ++ "-" ++ show num ++ ".txt") contents >>
+  writeStringsToFiles name (num + 1) rest
+writeStringsToFiles _ _ [] = return ()
+
 main :: IO ()
 main = do 
   args <- getArgs
@@ -62,4 +84,7 @@ main = do
   let (startV, rest) = splitAt 1 vertices
   let edges = evalState (generateGraph startV rest []) gen
   writeFile "graph.txt" (outputGraph vertices edges)
+  s <- readFile "graph.txt"
+  writeStringsToFiles "prim" 0 $ prim $ parseUndirectedGraph $ scanTokens s
+  writeStringsToFiles "kruskal" 0 $ kruskal $ parseUndirectedGraph $ scanTokens s
   return ()
