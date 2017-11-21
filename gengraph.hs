@@ -21,7 +21,7 @@ randomRS p = do
   return v
 
 outputGraph :: [Char] -> [Edge] -> String
-outputGraph c e = "VERTICES\n\n" ++ (intersperse ' ' c) ++ "\n\nEDGES\n\n" ++ edgesToString e 
+outputGraph c e = "vertices\n\n" ++ (intersperse ' ' c) ++ "\n\nedges\n\n" ++ edgesToString e 
 
 edgesToString :: [Edge] -> String
 edgesToString (e:es) = edgeToString e ++ "\n" ++ edgesToString es
