@@ -8,16 +8,17 @@ import qualified Data.ByteString.Char8 as C
 tokens :-
 
   $white+                       ;
-  [A-Z]+    { \s -> TokenId (C.pack s) }
+  "VERTICES"     { \s -> TokenVertices}
+   "EDGES"     { \s -> TokenEdges} 
+  [a-zA-Z]+    { \s -> TokenId (C.pack s) }
   [0-9]+     {\s -> TokenCost(C.pack s)}
-  "vertices"     { \s -> TokenVertices}
-  "edges"     { \s -> TokenEdges}  
 {
 
 -- The token type:
-data Token  = TokenId C.ByteString |
+data Token  = 
              TokenEdges |
              TokenVertices |
+             TokenId C.ByteString |
              TokenCost C.ByteString 
              
              
