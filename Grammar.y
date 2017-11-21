@@ -10,10 +10,9 @@ import Graph
 
 %token
     id { TokenId $$ }
-    cost { TokenCost $$ }
+    cost {TokenCost $$}
     VERTICES { TokenVertices }
     EDGES { TokenEdges }
-    SEMI { TokenSemi }
 %%
 
 --productions
@@ -30,7 +29,7 @@ Es:
 
 -- a -> as;
 E:
-  cost id id SEMI {($1,$2,$3)}
+cost id id{($1,$2,$3)}
 
 -- [a] or [a, ..., z]
 ids:
