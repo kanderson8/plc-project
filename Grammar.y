@@ -16,7 +16,7 @@ import Graph
 %%
 
 --productions
-Graph : VERTICES Vs EDGES Es {UndirectedGraph $2 $4}
+Graph : VERTICES Vs EDGES Es {UndirectedGraph $2 (eToEin $4)}
 
 -- ROOTS: [a, ... , z]
 Vs:
