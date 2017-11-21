@@ -17,11 +17,14 @@ executable simgc
   main-is:             Main.hs
   other-modules:       Tokens,Grammar,Graph
   -- other-extensions:    
-  build-depends:       base >=4.8,
-                       bytestring-trie,
+  build-depends:       array,
+                       base >=4.8,
                        bytestring,
+                       bytestring-trie,
+                       hashable >= 1.2.5.0,
                        mtl,
-                       array
+                       random >= 1.1,
+                       transformers >= 0.5.2.0
 
   -- hs-source-dirs:      
   default-language:    Haskell2010
