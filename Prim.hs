@@ -18,8 +18,10 @@ toString [] = []
 traversePrim :: UndirectedGraph -> Done->FinalEdges -> [UndirectedGraph]
 traversePrim (UndirectedGraph a b) [] e = (UndirectedGraph [] []) :
   (traversePrim (UndirectedGraph a b) ([(firstV (findMinEdge b (minEdge b (getCost (head b)) ) )),(secondV (findMinEdge b (minEdge b (getCost (head b)) ) ))]) ([findMinEdge b (minEdge b (getCost (head b)) ) ]))
-traversePrim (UndirectedGraph a b) v e = if (doneTraversal (UndirectedGraph a b) v) then [(UndirectedGraph v e)] else (UndirectedGraph v e) : (traversePrim (UndirectedGraph a b) (v ++ [(firstV (findMinEdge (findEdges (UndirectedGraph a b) v e) (minEdge (findEdges (UndirectedGraph a b) v e) (getCost (head (findEdges (UndirectedGraph a b) v e))) ) )),(secondV (findMinEdge (findEdges (UndirectedGraph a b) v e) (minEdge (findEdges (UndirectedGraph a b) v e) (getCost (head (findEdges (UndirectedGraph a b) v e))) ) ))])  (e ++[findMinEdge (findEdges (UndirectedGraph a b) v e) (minEdge (findEdges (UndirectedGraph a b) v e) (getCost (head (findEdges (UndirectedGraph a b) v e))) ) ]))
+traversePrim (UndirectedGraph a b) v e = if (doneTraversal (UndirectedGraph a b) v) then [(UndirectedGraph v e)] else (UndirectedGraph v e) : (traversePrim (UndirectedGraph a b) (combineInDone v (firstV (findMinEdge (findEdges (UndirectedGraph a b) v e) (minEdge (findEdges (UndirectedGraph a b) v e) (getCost (head (findEdges (UndirectedGraph a b) v e))) ) )) (secondV (findMinEdge (findEdges (UndirectedGraph a b) v e) (minEdge (findEdges (UndirectedGraph a b) v e) (getCost (head (findEdges (UndirectedGraph a b) v e))) ) ))))  (e ++[findMinEdge (findEdges (UndirectedGraph a b) v e) (minEdge (findEdges (UndirectedGraph a b) v e) (getCost (head (findEdges (UndirectedGraph a b) v e))) ) ])
 
+combineInDone :: Done -> V -> V -> Done
+combineInDone done v1 v2 = if (vertexInDone v1 done && vertexInDone v2 done) then done  else if (vertexInDone v1 done) then done ++ [v2] else if (vertexInDone v2 done) then done ++ [v1] else done ++ [v1] ++ [v2]
 
 doneTraversal :: UndirectedGraph -> Done -> Bool
 doneTraversal (UndirectedGraph a b) v =if (verticesInDone a v) then True else False
