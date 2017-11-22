@@ -63,11 +63,6 @@ generateGraph old new e = do
   generateGraph (old ++ [next]) (tail new) (e ++ [edge])
 
 
---What we want to do with the undirected graph
-process :: UndirectedGraph -> [String]
-process a = [show a]
-
-
 --writes to file
 writeStringsToFiles :: String -> Int -> [String] -> IO ()
 writeStringsToFiles name num (contents : rest) =
