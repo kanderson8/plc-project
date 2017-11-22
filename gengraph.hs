@@ -30,7 +30,7 @@ randomRS p = do
   return v
 
 outputGraph :: [Char] -> [Edge] -> String
-outputGraph c e = "VERTICES\n\n" ++ (intersperse ' ' c) ++ "\n\nEGDES\n\n" ++ edgesToString e 
+outputGraph c e = "VERTICES\n\n" ++ (intersperse ' ' c) ++ "\n\nEDGES\n\n" ++ edgesToString e 
 
 edgesToString :: [Edge] -> String
 edgesToString (e:es) = edgeToString e ++ "\n" ++ edgesToString es
@@ -62,13 +62,18 @@ generateGraph old new e = do
   edge <- addEdge old next
   generateGraph (old ++ [next]) (tail new) (e ++ [edge])
 
-
 --writes to file
-writeStringsToFiles :: String -> Int -> [String] -> IO ()
-writeStringsToFiles name num (contents : rest) =
+writeStringsToTxtFiles :: String -> Int -> [String] -> IO ()
+writeStringsToTxtFiles name num (contents : rest) =
   writeFile (name ++ "-" ++ show num ++ ".txt") contents >>
-  writeStringsToFiles name (num + 1) rest
-writeStringsToFiles _ _ [] = return ()
+  writeStringsToTxtFiles name (num + 1) rest
+writeStringsToTxtFiles _ _ [] = return ()
+
+writeStringsToGvFiles :: String -> Int -> [String] -> IO ()
+writeStringsToGvFiles name num (contents : rest) =
+  writeFile (name ++ "-" ++ show num ++ ".gv") contents >>
+  writeStringsToGvFiles name (num + 1) rest
+writeStringsToGvFiles _ _ [] = return ()
 
 main :: IO ()
 main = do 
@@ -78,8 +83,15 @@ main = do
   let gen = mkStdGen num
   let (startV, rest) = splitAt 1 vertices
   let edges = evalState (generateGraph startV rest []) gen
-  writeFile "graph.txt" (outputGraph vertices edges)
+ -- let gen1 = mkStdGen (num + num)
+  --let (startV1, rest1) = splitAt 1 vertices
+  --let edges1 = evalState (generateGraph startV1 rest1 []) gen1
+  --let gen2 = mkStdGen (num * num)
+  --let (startV2, rest2) = splitAt 1 vertices
+  --let edges2 = evalState (generateGraph startV2 rest2 []) gen2
+  writeFile "graph.txt" (outputGraph vertices (edges))
   s <- readFile "graph.txt"
-  writeStringsToFiles "prim" 0 $ prim $ parseUndirectedGraph $ scanTokens s
-  writeStringsToFiles "kruskal" 0 $ kruskal $ parseUndirectedGraph $ scanTokens s
+  writeStringsToTxtFiles "prim" 0 $ primTxt $ parseUndirectedGraph $ scanTokens s
+  writeStringsToGvFiles "prim" 0 $ primGv $ parseUndirectedGraph $ scanTokens s
+  writeStringsToTxtFiles "kruskal" 0 $ kruskal $ parseUndirectedGraph $ scanTokens s
   return ()
