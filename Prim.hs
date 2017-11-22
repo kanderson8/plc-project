@@ -18,7 +18,7 @@ toString [] = []
 traversePrim :: UndirectedGraph -> Done->FinalEdges -> [UndirectedGraph]
 traversePrim (UndirectedGraph a b) [] e = (UndirectedGraph [] []) :
   (traversePrim (UndirectedGraph a b) ([(firstV (findMinEdge b (minEdge b (getCost (head b)) ) )),(secondV (findMinEdge b (minEdge b (getCost (head b)) ) ))]) ([findMinEdge b (minEdge b (getCost (head b)) ) ]))
-traversePrim (UndirectedGraph a b) v e = if (doneTraversal (UndirectedGraph a b) v) then [(UndirectedGraph v e)] else (UndirectedGraph v e) : (traversePrim (UndirectedGraph a b) (combineInDone v (firstV (findMinEdge (findEdges (UndirectedGraph a b) v e) (minEdge (findEdges (UndirectedGraph a b) v e) (getCost (head (findEdges (UndirectedGraph a b) v e))) ) )) (secondV (findMinEdge (findEdges (UndirectedGraph a b) v e) (minEdge (findEdges (UndirectedGraph a b) v e) (getCost (head (findEdges (UndirectedGraph a b) v e))) ) ))))  (e ++[findMinEdge (findEdges (UndirectedGraph a b) v e) (minEdge (findEdges (UndirectedGraph a b) v e) (getCost (head (findEdges (UndirectedGraph a b) v e))) ) ])
+traversePrim (UndirectedGraph a b) v e = if (doneTraversal (UndirectedGraph a b) v) then [(UndirectedGraph v e)] else (UndirectedGraph v e) : (traversePrim (UndirectedGraph a b) (combineInDone v (firstV (findMinEdge (findEdges (UndirectedGraph a b) v) (minEdge (findEdges (UndirectedGraph a b) v) (getCost (head (findEdges (UndirectedGraph a b) v))) ) )) (secondV (findMinEdge (findEdges (UndirectedGraph a b) v) (minEdge (findEdges (UndirectedGraph a b) v) (getCost (head (findEdges (UndirectedGraph a b) v))) ) ))))  (e ++[findMinEdge (findEdges (UndirectedGraph a b) v) (minEdge (findEdges (UndirectedGraph a b) v) (getCost (head (findEdges (UndirectedGraph a b) v))) ) ])
 
 combineInDone :: Done -> V -> V -> Done
 combineInDone done v1 v2 = if (vertexInDone v1 done && vertexInDone v2 done) then done  else if (vertexInDone v1 done) then done ++ [v2] else if (vertexInDone v2 done) then done ++ [v1] else done ++ [v1] ++ [v2]
@@ -36,12 +36,16 @@ vertexInDone v (vd:[]) = if (v == vd) then True else False
 vertexInDone v (vd:vds) = if (v == vd || vertexInDone v vds) then True else False
 vertexInDone _ [] = False
 
-findEdges :: UndirectedGraph -> Done -> FinalEdges -> [E]
-findEdges (UndirectedGraph a b) v e = newEdges b e
+findEdges :: UndirectedGraph -> Done  -> [E]
+findEdges (UndirectedGraph a b) done  = newEdges b done 
 
-newEdges :: [E] ->FinalEdges -> [E]
-newEdges (e:es) fEs = if (edgeInDone e fEs) then  (newEdges es fEs) else e: (newEdges es fEs)
+newEdges :: [E] ->Done -> [E]
+newEdges (e:es) done = if (vsFromEinDone e done) then  (newEdges es done) else e: (newEdges es done)
 newEdges [] _  = []
+
+--Xnor
+vsFromEinDone :: E -> Done -> Bool
+vsFromEinDone (_,v1,v2) done = if (vertexInDone v1 done && vertexInDone v2 done) then True else if (vertexInDone v1 done) then False else if (vertexInDone v2 done) then False else True
 
 edgeInDone :: E ->FinalEdges -> Bool
 edgeInDone e (fe:fes) = if ((edgesAreEqual e fe) || (edgeInDone e fes)) then True else False
@@ -69,5 +73,3 @@ findMinEdge (e:es) min = if (getCost e == min) then e else findMinEdge es min
 
 getCost :: E -> Int
 getCost (cost, _, _) = cost
-
-  
