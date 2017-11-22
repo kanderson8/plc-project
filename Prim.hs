@@ -8,12 +8,29 @@ import qualified Data.ByteString.Char8 as C
 type Done = [V]
 type FinalEdges = [E]
 
-prim :: UndirectedGraph -> [String]
-prim (UndirectedGraph a b) = toString (traversePrim (UndirectedGraph a b) [] [])
+primTxt :: UndirectedGraph -> [String]
+primTxt (UndirectedGraph a b) = show (UndirectedGraph a b) : toString (traversePrim (UndirectedGraph a b) [] [])
+
+primGv :: UndirectedGraph -> [String]
+primGv (UndirectedGraph a b) = vizHelper (UndirectedGraph a b) : (toGraphViz (traversePrim (UndirectedGraph a b) [] []))
 
 toString :: [UndirectedGraph] -> [String]
 toString (a:as) = show a : toString as
 toString [] = []
+
+toGraphViz :: [UndirectedGraph] -> [String]
+toGraphViz (g:gs) = vizHelper g : toGraphViz gs
+toGraphViz [] = []
+
+vizHelper :: UndirectedGraph -> String
+vizHelper (UndirectedGraph a b) = "graph Prim {\n" ++ traverseEdges b ++"}"
+
+traverseEdges :: [E] -> String
+traverseEdges (e:es) =vizEdge e ++ (traverseEdges es)
+traverseEdges [] = []
+
+vizEdge :: E -> String
+vizEdge (cost, v1, v2) = (C.unpack v1) ++ " [ shape = circle];\n" ++ (C.unpack v2) ++ " [shape = circle];\n" ++ (C.unpack v1) ++ " -- " ++ (C.unpack v2) ++ " [penwidth = " ++ (show cost) ++ " ];\n"
 
 traversePrim :: UndirectedGraph -> Done->FinalEdges -> [UndirectedGraph]
 traversePrim (UndirectedGraph a b) [] e = (UndirectedGraph [] []) :
