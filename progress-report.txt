@@ -1,0 +1,13 @@
+From our progress proposal we have completed the random graph generator, the lexer/parser,
+mostly done with Prim, and are starting on Kruskal. The code to convert a list of vertices
+and edges to GraphViz format is also done. The script from hw8 is used to take the .gv format
+and generate the images of the before and after of the graph from running Prim's and Kruskal's
+algorithm. Also, all of the code is integrated together, and the only input is the amount of
+vertices wanted when generating the initial undirected graph. From there the edges and vertices
+generated are written to a file called graph.txt. That file is then parsed and made into a 
+UndirectedGraph type which is a list of Vertices and a list of Edges. That initial configuration
+is then passed to the Prim and Kruskal algorithm. Currently the Prim function generates the initial
+state followed by all of the steps to reach the final Minimum Spanning Tree following Prim's algorithm.
+Those states are outputted as text files and gv files which can then be turned into images.
+
+We would like to do a project presentation.
