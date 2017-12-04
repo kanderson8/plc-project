@@ -93,5 +93,6 @@ main = do
   s <- readFile "graph.txt"
   writeStringsToTxtFiles "prim" 0 $ primTxt $ parseUndirectedGraph $ scanTokens s
   writeStringsToGvFiles "prim" 0 $ primGv $ parseUndirectedGraph $ scanTokens s
-  writeStringsToTxtFiles "kruskal" 0 $ kruskal $ parseUndirectedGraph $ scanTokens s
+  writeStringsToTxtFiles "kruskal" 0 $ kruskalTxt $ parseUndirectedGraph $ scanTokens s
+  writeStringsToGvFiles "kruskal" 0 $ kruskalGv $ parseUndirectedGraph $ scanTokens s
   return ()
