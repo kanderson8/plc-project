@@ -6,7 +6,6 @@ import Data.List
 import qualified Data.Trie as D
 import qualified Data.ByteString.Char8 as C
 
-
 kruskalTxt :: UndirectedGraph -> [String]
 --kruskal a = [show a] {- initial graph -}
 kruskalTxt (UndirectedGraph a b) = show (UndirectedGraph a b) : toString (traverseKruskal (UndirectedGraph a (sortE b)) 1 [] [])
@@ -42,10 +41,27 @@ getEdgeAtN (e:es) n = getEdgeAtN es (n-1)
 
 --not done
 edgeHelpful :: E -> Done -> FinalEdges -> Bool
+--edgeHelpful (c, v1, v2) done f = 
 edgeHelpful (c, v1, v2) done f = 
-  if not ((elem v1 done) && (elem v2 done))
-  then True 
-  else checkForCycle (c, v1, v2) [v1] (getConnected v1 [] f) f
+ if not ((elem v1 done) && (elem v2 done))
+  then True
+  else  not (isPath v1 f [v2] [])
+ -- else checkForCycle (c, v1, v2) [v1] (getConnected v1 [] f) f
+
+--checks if there is a path from inputted V, [E] a queue initiall with a V and an empty done
+isPath ::  V -> FinalEdges -> [V]-> [V] -> Bool
+isPath _ _ [] _ = False
+isPath  v final queue done = if (elem v (getNeighbors (head queue) final [] done)) then True
+  else isPath  v final ((tail queue) ++ getNeighbors (head queue) final [] done) (done ++ [(head queue)])
+                                                    
+--gets all neighbors
+getNeighbors :: V -> FinalEdges -> [V]->[V]->[V]
+getNeighbors v [] s done = s
+getNeighbors v (e:es) s done = if (v == firstV e && not(elem (secondV e) done)) then getNeighbors v es ([(secondV e)] ++ s) (done ++ [secondV e])
+  else if (v == secondV e && not(elem (firstV e) done)) then getNeighbors v es ([(firstV e)] ++ s) (done ++ [(secondV e)])
+  else getNeighbors v es s done
+  
+{-
   
 --this takes in an edge to check, a list of vertices that have been visited, a list of edges to add, and a boolean
 checkForCycle :: E -> [V] -> [E] -> FinalEdges -> Bool
@@ -63,20 +79,24 @@ getConnected v1 vs (e:es) =
   else (getConnected v1 vs es)
 
 checkEdge :: V -> E -> Bool
-checkEdge c (c1, v1, v2) = if c == v1 then True else False
+checkEdge c (c1, v1, v2) = if c == v1  then True else False
 
 isConnected :: V -> E -> Bool
 isConnected v (c, v1, v2) = if v == v2 then True else False
 
 --if the second vertex is already in the visited list then true else false
 beenVisited :: E -> [V] -> Bool
-beenVisited (c, v1, v2) vs = if elem v2 vs then True else False
+beenVisited (c, v1, v2) vs =  elem v2 vs
 
 getFirst :: E -> V
 getFirst (c, v1, v2) = v1
 
 getSecond :: E -> V
 getSecond (c, v1, v2) = v2
+
+-}
+
+
 
 
 
