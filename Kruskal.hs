@@ -43,7 +43,6 @@ getEdgeAtN (e:es) n = getEdgeAtN es (n-1)
 --not done
 edgeHelpful :: E -> Done -> FinalEdges -> Bool
 edgeHelpful (c, v1, v2) done f = 
-  if (elem v1 done) && (elem v2 done)
   if not ((elem v1 done) && (elem v2 done))
   then True 
   else checkForCycle (c, v1, v2) [v1] (getConnected v1 [] f) f
