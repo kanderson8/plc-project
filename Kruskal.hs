@@ -23,7 +23,7 @@ traverseKruskal :: UndirectedGraph -> Int -> Done -> FinalEdges -> [UndirectedGr
 
 traverseKruskal (UndirectedGraph a b) n [] f =  (UndirectedGraph [] []) :  traverseKruskal (UndirectedGraph a b) ((getNextHelpfulEdge b [] f n) + 1) (addVs (getEdgeAtN b (getNextHelpfulEdge b [] f n)) []) (f ++ [(getEdgeAtN b (getNextHelpfulEdge b [] f n))])
 
-traverseKruskal (UndirectedGraph a b) n d f = (UndirectedGraph d f) : if ((getNextHelpfulEdge b d f n) == 0) then [] else  traverseKruskal (UndirectedGraph a b) ((getNextHelpfulEdge b d f n) + 1) (d ++ (addVs (getEdgeAtN b (getNextHelpfulEdge b d f n)) d))  (f ++ [(getEdgeAtN b (getNextHelpfulEdge b [] f n))])
+traverseKruskal (UndirectedGraph a b) n d f = (UndirectedGraph d f) : if ((getNextHelpfulEdge b d f n) == 0) then [] else  traverseKruskal (UndirectedGraph a b) ((getNextHelpfulEdge b d f n) + 1) (d ++ (addVs (getEdgeAtN b (getNextHelpfulEdge b d f n)) d))  (f ++ [(getEdgeAtN b (getNextHelpfulEdge b d f n))])
 
 --given location in [E] give the next helpful edge or 0 if done
 getNextHelpfulEdge :: [E] -> Done -> FinalEdges ->Int -> Int
