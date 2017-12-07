@@ -1,0 +1,11 @@
+graph Prim {
+B [ shape = circle];
+J [shape = circle];
+B -- J [label = 1 ];
+D [ shape = circle];
+G [shape = circle];
+D -- G [label = 1 ];
+D [ shape = circle];
+H [shape = circle];
+D -- H [label = 1 ];
+}

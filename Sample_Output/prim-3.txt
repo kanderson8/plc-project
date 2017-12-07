@@ -1,0 +1,1 @@
+UndirectedGraph ["E","G","F"] [(1,"E","G"),(1,"E","F")]
