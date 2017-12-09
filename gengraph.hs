@@ -55,12 +55,18 @@ addEdge cs new = do
 representing the vertices that still need to be added to the graph and it returns a list of edges associated with the graph -}
 generateGraph :: RandomGen g => [Char] -> [Char] -> [Edge] -> RandomState g [Edge]
 generateGraph old [] e = do
-  return e
+  buildMoreEdges e old 20
 
 generateGraph old new e = do
   let next = head new
   edge <- addEdge old next
   generateGraph (old ++ [next]) (tail new) (e ++ [edge])
+  
+buildMoreEdges :: RandomGen g => [Edge] -> [Char] -> Int -> RandomState g [Edge]
+buildMoreEdges e cs n = do
+  sel <- randomRS(1, (length cs) :: Int)
+  edge <- addEdge cs (last (take sel cs))
+  if n > 0 then buildMoreEdges (e ++ [edge]) cs (n-1) else return e
 
 --writes to file
 writeStringsToTxtFiles :: String -> Int -> [String] -> IO ()
@@ -83,12 +89,6 @@ main = do
   let gen = mkStdGen num
   let (startV, rest) = splitAt 1 vertices
   let edges = evalState (generateGraph startV rest []) gen
- -- let gen1 = mkStdGen (num + num)
-  --let (startV1, rest1) = splitAt 1 vertices
-  --let edges1 = evalState (generateGraph startV1 rest1 []) gen1
-  --let gen2 = mkStdGen (num * num)
-  --let (startV2, rest2) = splitAt 1 vertices
-  --let edges2 = evalState (generateGraph startV2 rest2 []) gen2
   writeFile "graph.txt" (outputGraph vertices (edges))
   s <- readFile "graph.txt"
   writeStringsToTxtFiles "prim" 0 $ primTxt $ parseUndirectedGraph $ scanTokens s
