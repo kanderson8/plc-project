@@ -65,8 +65,8 @@ generateGraph old new e = do
 buildMoreEdges :: RandomGen g => [Edge] -> [Char] -> Int -> RandomState g [Edge]
 buildMoreEdges e cs n = do
   sel <- randomRS(1, (length cs) :: Int)
-  edge <- addEdge cs (last (take sel cs))
-  if n > 0 then buildMoreEdges (e ++ [edge]) cs (n-1) else return e
+  (num, v1, v2) <- addEdge cs (last (take sel cs))
+  if n > 0 then if v1 /= v2 then buildMoreEdges (e ++ [(num, v1, v2)]) cs (n-1) else buildMoreEdges e cs (n-1) else return e
 
 --writes to file
 writeStringsToTxtFiles :: String -> Int -> [String] -> IO ()
